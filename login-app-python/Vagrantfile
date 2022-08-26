@@ -1,0 +1,30 @@
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "hashicorp/bionic64"
+  config.vm.provision "shell", inline: "echo echo"
+ 
+  config.vm.define "fe" do |fe|
+    fe.vm.box = "hashicorp/bionic64"
+    fe.vm.network "private_network", ip: "10.0.0.2", netmask: "255.255.255.0", auto_config: true
+    fe.vm.provision "file", source: "./app.py", destination: "/tmp/app.py"
+    fe.vm.provision "shell", path: "fe.sh"
+  end
+ 
+  config.vm.define "db" do |db|
+    db.vm.box = "hashicorp/bionic64"
+    db.vm.network "private_network", ip: "10.0.0.3", netmask: "255.255.255.0", auto_config: true
+    db.vm.network "forwarded_port", guest: 27017, host: 27017
+    db.vm.provision "file", source: "./mongodb.conf", destination: "/tmp/mongodb.conf"
+    db.vm.provision "shell", path: "db.sh"
+  end
+
+  #config.vm.define "test" do |test|
+  #  test.vm.box = "hashicorp/bionic64"
+    #test.vm.network "private_network", ip: "10.0.0.5", netmask: "255.255.255.0", auto_config: true
+    #test.vm.network "forwarded_port", guest: 27017, host: 27017
+    #test.vm.provision "shell", path: "backPrerequisites.sh"
+
+  #end
+
+end

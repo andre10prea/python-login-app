@@ -1,0 +1,16 @@
+#! /bin/bash
+
+
+
+#installing mongodb
+
+sudo apt update -y
+
+sudo apt install -y mongodb
+
+sudo mv -f /tmp/mongodb.conf /etc
+
+sudo systemctl stop mongod
+
+sudo systemctl start mongod
+
